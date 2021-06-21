@@ -4,6 +4,6 @@ Ventoy2Disk.exe to create a Ventoy Sparse Image (VTSI) file.
 2. Enable Option--->Generate VTSI File
 3. Click Install button
 
-When Generate VTSI File is enabled, Install operation will NOT write data to the disk, but will create a VentoySparseImg.vtsi file.
-This vtsi file is to Sparse Snap of the selected disk of Ventoy.
+When Generate VTSI File is enabled, Install operation will NOT write data to the disk, but will create a `VentoySparseImg.vtsi` file.
+This vtsi file is the Sparse Snap of the selected disk of Ventoy.
 
