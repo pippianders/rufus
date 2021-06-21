@@ -237,6 +237,7 @@ static comp_assoc file_assoc[] = {
 	{ ".lzma", BLED_COMPRESSION_LZMA },
 	{ ".bz2", BLED_COMPRESSION_BZIP2 },
 	{ ".xz", BLED_COMPRESSION_XZ },
+	{ ".vtsi", BLED_COMPRESSION_VTSI },
 };
 
 // For now we consider that an image that matches a known extension is bootable
@@ -247,7 +248,7 @@ BOOL IsCompressedBootableImage(const char* path)
 	unsigned char *buf = NULL;
 	int i;
 	BOOL r = FALSE;
-	int64_t dc;
+	int64_t dc, dsize;
 
 	img_report.compression_type = BLED_COMPRESSION_NONE;
 	for (p = (char*)&path[strlen(path)-1]; (*p != '.') && (p != path); p--);
@@ -264,11 +265,14 @@ BOOL IsCompressedBootableImage(const char* path)
 			FormatStatus = 0;
 			bled_init(_uprintf, NULL, NULL, NULL, NULL, &FormatStatus);
 			dc = bled_uncompress_to_buffer(path, (char*)buf, MBR_SIZE, file_assoc[i].type);
+			dsize = bled_get_uncompress_size(path, file_assoc[i].type);
 			bled_exit();
 			if (dc != MBR_SIZE) {
 				free(buf);
 				return FALSE;
 			}
+            if (dsize > 0)
+                img_report.projected_size = (uint64_t)dsize;
 			r = (buf[0x1FE] == 0x55) && (buf[0x1FF] == 0xAA);
 			free(buf);
 			return r;

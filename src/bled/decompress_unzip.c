@@ -247,6 +247,9 @@ IF_DESKTOP(long long) int FAST_FUNC unpack_zip_stream(transformer_state_t *xstat
 	uint32_t cdf_offset = 0;
 #endif
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	while (1) {
 		uint32_t magic;
 		bool is_dir = false;

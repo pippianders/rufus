@@ -30,8 +30,12 @@ typedef enum {
 	BLED_COMPRESSION_BZIP2,		// .bz2
 	BLED_COMPRESSION_XZ,		// .xz
 	BLED_COMPRESSION_7ZIP,		// .7z
+	BLED_COMPRESSION_VTSI,	    // .vtsi
 	BLED_COMPRESSION_MAX
 } bled_compression_type;
+
+/* Get the uncompressed data size of file 'src', compressed using 'type' */
+int64_t bled_get_uncompress_size(const char* src, int type);
 
 /* Uncompress file 'src', compressed using 'type', to file 'dst' */
 int64_t bled_uncompress(const char* src, const char* dst, int type);

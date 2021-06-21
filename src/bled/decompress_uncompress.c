@@ -105,6 +105,9 @@ unpack_Z_stream(transformer_state_t *xstate)
 	if (check_signature16(xstate, COMPRESS_MAGIC))
 		return -1;
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	inbuf = xzalloc(IBUFSIZ + 64);
 	outbuf = xzalloc(OBUFSIZ + 2048);
 	htab = xzalloc(HSIZE);  /* wasn't zeroed out before, maybe can xmalloc? */

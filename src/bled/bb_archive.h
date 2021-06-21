@@ -201,6 +201,7 @@ int start_bunzip(bunzip_data **bdp, int in_fd, const void *inbuf, int len) FAST_
 int read_bunzip(bunzip_data *bd, char *outbuf, int len) FAST_FUNC;
 void dealloc_bunzip(bunzip_data *bd) FAST_FUNC;
 
+#define BLED_DST_SIZE_MAGIC 0xFFFFFFFFFFFFFFFEULL
 /* Meaning and direction (input/output) of the fields are transformer-specific */
 typedef struct transformer_state_t {
 	int8_t      check_signature;        /* most often referenced member */
@@ -266,6 +267,7 @@ IF_DESKTOP(long long) int unpack_gz_stream(transformer_state_t *xstate) FAST_FUN
 IF_DESKTOP(long long) int unpack_bz2_stream(transformer_state_t *xstate) FAST_FUNC;
 IF_DESKTOP(long long) int unpack_lzma_stream(transformer_state_t *xstate) FAST_FUNC;
 IF_DESKTOP(long long) int unpack_xz_stream(transformer_state_t *xstate) FAST_FUNC;
+IF_DESKTOP(long long) int unpack_vtsi_stream(transformer_state_t *xstate) FAST_FUNC;
 
 char* append_ext(char *filename, const char *expected_ext) FAST_FUNC;
 int bbunpack(char **argv,

@@ -227,6 +227,9 @@ unpack_lzma_stream(transformer_state_t *xstate)
 	int state = 0;
 	uint32_t rep0 = 1, rep1 = 1, rep2 = 1, rep3 = 1;
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	if (full_read(xstate->src_fd, &header, sizeof(header)) != sizeof(header)
 	 || header.pos >= (9 * 5 * 5)
 	) {

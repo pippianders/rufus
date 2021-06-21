@@ -1211,6 +1211,9 @@ unpack_gz_stream(transformer_state_t *xstate)
 	}
 #endif
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	total = 0;
 
 	ALLOC_STATE;

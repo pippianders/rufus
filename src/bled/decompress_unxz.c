@@ -41,6 +41,9 @@ IF_DESKTOP(long long) int FAST_FUNC unpack_xz_stream(transformer_state_t *xstate
 	uint8_t *in = NULL, *out = NULL;
 	ssize_t nwrote;
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	xz_crc32_init();
 
 	/*

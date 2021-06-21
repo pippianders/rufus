@@ -46,8 +46,49 @@ unpacker_t unpacker[BLED_COMPRESSION_MAX] = {
 	unpack_lzma_stream,
 	unpack_bz2_stream,
 	unpack_xz_stream,
-	unpack_none
+	unpack_none,
+	unpack_vtsi_stream
 };
+
+int64_t bled_get_uncompress_size(const char* src, int type)
+{
+	transformer_state_t xstate;
+	int64_t ret;
+
+	if (!bled_initialized) {
+		bb_error_msg("The library has not been initialized");
+		return -1;
+	}
+
+	bb_total_rb = 0;
+	init_transformer_state(&xstate);
+	xstate.src_fd = -1;
+	xstate.dst_fd = -1;
+	xstate.check_signature = 1;
+    xstate.dst_size = BLED_DST_SIZE_MAGIC;
+
+	xstate.src_fd = _openU(src, _O_RDONLY | _O_BINARY, 0);
+	if (xstate.src_fd < 0) {
+		bb_error_msg("Could not open '%s' (errno: %d)", src, errno);
+		goto err;
+	}
+
+	if ((type < 0) || (type >= BLED_COMPRESSION_MAX)) {
+		bb_error_msg("Unsupported compression format");
+		goto err;
+	}
+
+	if (setjmp(bb_error_jmp))
+		goto err;
+	ret = unpacker[type](&xstate);
+	_close(xstate.src_fd);
+	return ret;
+
+err:
+	if (xstate.src_fd > 0)
+		_close(xstate.src_fd);
+	return -1;
+}
 
 /* Uncompress file 'src', compressed using 'type', to file 'dst' */
 int64_t bled_uncompress(const char* src, const char* dst, int type)

@@ -744,6 +744,9 @@ unpack_bz2_stream(transformer_state_t *xstate)
 	if (check_signature16(xstate, BZIP2_MAGIC))
 		return -1;
 
+    if (xstate->dst_size == BLED_DST_SIZE_MAGIC)
+        return -1; /* not supported now */
+
 	outbuf = xmalloc(IOBUF_SIZE);
 	if (outbuf == NULL)
 		return -1;
